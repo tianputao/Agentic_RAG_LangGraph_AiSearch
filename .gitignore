@@ -104,3 +104,9 @@ conversation_history/
 exports/
 downloads/
 uploads/
+
+# Temporary files with version-like names
+=*
+*.tmp
+*.temp
+

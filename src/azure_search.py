@@ -26,6 +26,9 @@ try:
     AZURE_SDK_AVAILABLE = True
 except ImportError:
     # Fallback imports for development/testing
+    import sys
+    import os
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'test_script'))
     from mock_dependencies import MockAzureSearchClient
     SearchClient = None
     AzureKeyCredential = None

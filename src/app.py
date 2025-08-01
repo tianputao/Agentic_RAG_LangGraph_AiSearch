@@ -170,6 +170,8 @@ class StreamlitRAGApp:
                 load_dotenv(env_file)
             except ImportError:
                 # Fallback manual loading
+                import sys
+                sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'test_script'))
                 from mock_dependencies import load_dotenv
                 load_dotenv(env_file)
         

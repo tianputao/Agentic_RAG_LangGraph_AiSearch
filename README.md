@@ -1,6 +1,6 @@
 # Azure Agentic RAG Chatbot
 
-An enterprise-grade Agentic RAG (Retrieval-Augmented Generation) chatbot system designed for automotive industry knowledge retrieval and Q&A, powered by Azure OpenAI GPT-4, Azure AI Search, LangGraph, and Streamlit.
+An enterprise-grade Agentic RAG (Retrieval-Augmented Generation) chatbot system designed for automotive industry knowledge retrieval and Q&A, powered by Azure OpenAI GPT-4o, Azure AI Search, LangGraph, and Streamlit.
 
 ## 🚗 Features
 

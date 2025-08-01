@@ -19,6 +19,9 @@ try:
     LANGCHAIN_AVAILABLE = True
 except ImportError:
     # Fallback imports for development/testing
+    import sys
+    import os
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'test_script'))
     from mock_dependencies import (
         MockStateGraph as StateGraph,
         MockLLM as AzureChatOpenAI,
@@ -28,9 +31,7 @@ except ImportError:
         MockConversationMemory as ConversationBufferWindowMemory,
         MOCK_END as END
     )
-    LANGCHAIN_AVAILABLE = False
-
-# Local imports
+    LANGCHAIN_AVAILABLE = False# Local imports
 from azure_search import AzureSearchClient, SearchResult
 from prompts import (
     PLANNING_PROMPT, 

@@ -11,8 +11,8 @@ import tempfile
 import json
 from datetime import datetime
 
-# Add project root to path
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+# Add src directory to path
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'src'))
 
 # Import modules to test
 try:
