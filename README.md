@@ -9,14 +9,13 @@ An enterprise-grade Agentic RAG (Retrieval-Augmented Generation) chatbot system 
 - **Multi-threaded Retrieval**: Concurrent search execution for complex queries with automatic result aggregation
 - **Conversation Memory**: Maintains context across multiple conversation turns
 - **Interactive Web Interface**: Clean Streamlit-based chat interface with source citations and metadata display
-- **Enterprise Security**: All credentials managed through environment variables and Azure Key Vault integration ready
 
 ## 🏗️ Architecture
 
 ### Core Components
 
 1. **Query Planning Node** (`rag_agent.py`)
-   - Analyzes user questions using GPT-4
+   - Analyzes user questions using GPT-4o
    - Breaks complex questions into optimized search queries
    - Handles typo correction and query refinement
 
@@ -28,7 +27,7 @@ An enterprise-grade Agentic RAG (Retrieval-Augmented Generation) chatbot system 
 
 3. **Answer Generation Node** (`rag_agent.py`)
    - Synthesizes final answers using retrieved context
-   - GPT-4 powered response generation
+   - GPT-4o powered response generation
    - Source attribution and citation
 
 4. **Web Interface** (`app.py`)
@@ -41,7 +40,7 @@ An enterprise-grade Agentic RAG (Retrieval-Augmented Generation) chatbot system 
 ```
 User Question → Query Planning → Document Retrieval → Answer Generation → Response
       ↓              ↓                   ↓                    ↓             ↓
-   Streamlit     GPT-4 Analysis    Azure AI Search      GPT-4 Synthesis  Web UI
+   Streamlit     GPT-4o Analysis    Azure AI Search      GPT-4o Synthesis  Web UI
      UI         Query Breaking     Hybrid Search        Context Integration Display
 ```
 
@@ -62,7 +61,7 @@ cat TROUBLESHOOTING.md
 ### Prerequisites
 
 - Python 3.9+
-- Azure OpenAI service with GPT-4 deployment
+- Azure OpenAI service with GPT-4o and Embedding model deployment
 - Azure AI Search service with configured index
 - Azure subscription with appropriate permissions
 
@@ -78,10 +77,7 @@ cat TROUBLESHOOTING.md
    ```bash
    # Full setup with error handling
    ./setup.sh
-   
-   # Alternative: Quick fix for common issues
-   ./quick_fix.sh
-   ```
+
 
 3. **Manual installation** (If automated setup fails)
    ```bash
@@ -98,7 +94,7 @@ cat TROUBLESHOOTING.md
 
 4. **Environment Configuration**
    
-   Create a `.env` file with the following variables:
+   Create a `.env` file with the following variables example:
    
    ```bash
    # Azure OpenAI Configuration
@@ -119,8 +115,12 @@ cat TROUBLESHOOTING.md
    MAX_SEARCH_RESULTS=20
    MAX_CONCURRENT_SEARCHES=5
    ENABLE_CONVERSATION_MEMORY=true
-   ```
+   
 
+   # Citation URL
+   DOC_BASEURL=
+   DOC_SAS=
+   ```
 ## 🚀 Usage
 
 ### Running the Application
@@ -166,29 +166,7 @@ print(f"Sources: {len(response['sources'])} documents")
 print(f"Planned queries: {response['planned_queries']}")
 ```
 
-## 📁 Project Structure
-
-```
-Agentic_Rag/
-├── app.py                 # Streamlit web application
-├── rag_agent.py          # LangGraph agent orchestration
-├── azure_search.py       # Azure AI Search integration
-├── prompts.py            # System prompts and templates
-├── requirements.txt      # Python dependencies
-├── .env.example         # Environment variables template
-└── README.md            # This file
-```
-
 ## 🔧 Configuration
-
-### Azure AI Search Index Requirements
-
-Your Azure AI Search index should have the following fields:
-- `content`: Main text content (searchable, retrievable)
-- `title`: Document title (searchable, retrievable)
-- `source`: Document source/URL (retrievable)
-- `metadata`: Additional metadata (retrievable)
-- `chunk_id`: Unique chunk identifier (retrievable)
 
 ### Semantic Search Configuration
 
@@ -227,17 +205,6 @@ Ensure your Azure AI Search service has:
 - Confidence scoring for search results
 - Metadata tracking for debugging and optimization
 
-## 🧪 Testing
-
-Run the test functions to verify your setup:
-
-```python
-# Test Azure Search integration
-python azure_search.py
-
-# Test RAG agent workflow
-python rag_agent.py
-```
 
 ## 📊 Monitoring and Debugging
 
@@ -305,17 +272,6 @@ Deploy using Azure Container Apps for scalable cloud hosting with Azure integrat
 ### Azure App Service
 Deploy as a web app with easy scaling and monitoring capabilities.
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes following the coding standards
-4. Add tests for new functionality
-5. Submit a pull request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## 🆘 Support
 
