@@ -25,6 +25,10 @@ services:
       - MAX_SEARCH_RESULTS=${MAX_SEARCH_RESULTS:-20}
       - MAX_CONCURRENT_SEARCHES=${MAX_CONCURRENT_SEARCHES:-5}
       - ENABLE_CONVERSATION_MEMORY=${ENABLE_CONVERSATION_MEMORY:-true}
+
+      # Citation URL
+      - DOC_BASEURL=${DOC_BASEURL}
+      - DOC_SAS=${DOC_SAS}
     volumes:
       - ./logs:/app/logs
     restart: unless-stopped

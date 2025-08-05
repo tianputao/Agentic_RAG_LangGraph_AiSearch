@@ -1,4 +1,4 @@
-# Azure Agentic RAG System Requirements (Python 3.12 Compatible)
+# Azure Agentic RAG System Requirements (Python 3.9+ Compatible)
 
 # Core Web Framework
 streamlit>=1.30.0
