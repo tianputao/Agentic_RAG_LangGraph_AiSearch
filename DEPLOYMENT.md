@@ -7,8 +7,8 @@ This guide provides comprehensive instructions for deploying the Agentic RAG cha
 ### Azure Services Required
 
 1. **Azure OpenAI Service**
-   - GPT-4 model deployment
-   - Text embedding model deployment (optional)
+   - GPT-4o model deployment
+   - Text embedding model deployment
    - Valid API endpoint and key
 
 2. **Azure AI Search Service**
@@ -103,47 +103,10 @@ LOG_LEVEL=INFO
 MAX_SEARCH_RESULTS=20
 MAX_CONCURRENT_SEARCHES=5
 ENABLE_CONVERSATION_MEMORY=true
-CONVERSATION_MEMORY_WINDOW=5
-```
 
-### Azure AI Search Index Requirements
-
-Your search index should contain the following fields:
-
-```json
-{
-  "fields": [
-    {
-      "name": "content",
-      "type": "Edm.String",
-      "searchable": true,
-      "retrievable": true,
-      "analyzer": "standard.lucene"
-    },
-    {
-      "name": "title", 
-      "type": "Edm.String",
-      "searchable": true,
-      "retrievable": true
-    },
-    {
-      "name": "source",
-      "type": "Edm.String",
-      "retrievable": true
-    },
-    {
-      "name": "metadata",
-      "type": "Edm.String",
-      "retrievable": true
-    },
-    {
-      "name": "chunk_id",
-      "type": "Edm.String",
-      "key": true,
-      "retrievable": true
-    }
-  ]
-}
+# Citation URL
+DOC_BASEURL=
+DOC_SAS=
 ```
 
 ## 🌐 Deployment Options
@@ -301,62 +264,6 @@ spec:
       port: 80
       targetPort: 8501
   type: LoadBalancer
-```
-
-## 🔒 Security Configuration
-
-### 1. Azure Key Vault Integration
-
-```python
-# Example: config.py with Key Vault
-from azure.keyvault.secrets import SecretClient
-from azure.identity import DefaultAzureCredential
-
-def get_secret_from_keyvault(secret_name: str) -> str:
-    credential = DefaultAzureCredential()
-    client = SecretClient(
-        vault_url="https://your-keyvault.vault.azure.net/",
-        credential=credential
-    )
-    return client.get_secret(secret_name).value
-```
-
-### 2. Managed Identity Configuration
-
-```bash
-# Enable managed identity for Container App
-az containerapp identity assign \
-  --name aca-agentic-rag \
-  --resource-group rg-agentic-rag \
-  --system-assigned
-
-# Grant permissions to Azure OpenAI
-az role assignment create \
-  --assignee $PRINCIPAL_ID \
-  --role "Cognitive Services OpenAI User" \
-  --scope /subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP
-```
-
-### 3. Network Security
-
-```bash
-# Create virtual network
-az network vnet create \
-  --name vnet-agentic-rag \
-  --resource-group rg-agentic-rag \
-  --address-prefix 10.0.0.0/16 \
-  --subnet-name subnet-apps \
-  --subnet-prefix 10.0.1.0/24
-
-# Configure private endpoints for Azure services
-az network private-endpoint create \
-  --name pe-openai \
-  --resource-group rg-agentic-rag \
-  --vnet-name vnet-agentic-rag \
-  --subnet subnet-apps \
-  --private-connection-resource-id $OPENAI_RESOURCE_ID \
-  --group-id account \
-  --connection-name openai-connection
 ```
 
 ## 📊 Monitoring and Logging
@@ -518,20 +425,6 @@ az monitor metrics list \
 # Run with debug logging
 export LOG_LEVEL=DEBUG
 python run.py --cli
-```
-
-### Health Checks
-
-```python
-# Add health check endpoint
-@app.route('/health')
-def health_check():
-    try:
-        # Test Azure connections
-        agent = AgenticRAGAgent()
-        return {"status": "healthy"}, 200
-    except Exception as e:
-        return {"status": "unhealthy", "error": str(e)}, 500
 ```
 
 ## 📈 Scaling Considerations

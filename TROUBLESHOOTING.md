@@ -1,15 +1,15 @@
-# 故障排除指南 (Troubleshooting Guide)
+# Troubleshooting Guide
 
-## 常见问题及解决方案
+## Common Issues and Solutions
 
-### 1. 安装问题 (Installation Issues)
+### 1. Installation Issues
 
-#### 问题: "Cannot import 'setuptools.build_meta'"
+#### Issue: "Cannot import 'setuptools.build_meta'"
 ```bash
-# 解决方案 1: 使用快速修复脚本
+# Solution 1: Use quick fix script
 ./quick_fix.sh
 
-# 解决方案 2: 手动修复
+# Solution 2: Manual fix
 rm -rf venv
 python3 -m venv venv
 source venv/bin/activate
@@ -17,159 +17,147 @@ python -m pip install --upgrade pip setuptools wheel build
 pip install -r requirements.txt
 ```
 
-#### 问题: pip 安装失败
+#### Issue: pip installation fails
 ```bash
-# 升级 pip 和构建工具
+# Upgrade pip and build tools
 python -m pip install --upgrade pip setuptools wheel
 
-# 使用 --no-cache-dir 参数
+# Use --no-cache-dir parameter
 pip install --no-cache-dir -r requirements.txt
 
-# 逐个安装包
+# Install packages one by one
 pip install streamlit python-dotenv pydantic
 ```
 
-#### 问题: Python 版本不兼容
+#### Issue: Python version incompatibility
 ```bash
-# 检查 Python 版本
+# Check Python version
 python3 --version
 
-# 需要 Python 3.9 或更高版本
-# 在 Ubuntu/Debian 上安装:
+# Requires Python 3.9 or higher
+# On Ubuntu/Debian:
 sudo apt update
 sudo apt install python3.9 python3.9-venv python3.9-dev
 
-# 在 CentOS/RHEL 上安装:
+# On CentOS/RHEL:
 sudo yum install python39 python39-venv python39-devel
 ```
 
-### 2. 运行时问题 (Runtime Issues)
+### 2. Runtime Issues
 
-#### 问题: Azure 服务连接失败
+#### Issue: Azure service connection failed
 ```bash
-# 检查 .env 文件配置
+# Check .env file configuration
 cat .env
 
-# 确保设置了正确的环境变量:
+# Ensure correct environment variables are set:
 # AZURE_OPENAI_API_KEY
 # AZURE_OPENAI_ENDPOINT
 # AZURE_SEARCH_API_KEY
 # AZURE_SEARCH_SERVICE_NAME
 ```
 
-#### 问题: Streamlit 无法启动
+#### Issue: Streamlit cannot start
 ```bash
-# 检查端口是否被占用
+# Check if port is already in use
 netstat -tulpn | grep :8501
 
-# 使用不同端口启动
+# Start with different port
 streamlit run src/app.py --server.port 8502
 
-# 检查防火墙设置
+# Check firewall settings
 sudo ufw allow 8501
 ```
 
-#### 问题: 模块导入错误
+#### Issue: Module import error
 ```bash
-# 确保虚拟环境已激活
+# Ensure virtual environment is activated
 source venv/bin/activate
 
-# 检查 Python 路径
+# Check Python path
 python -c "import sys; print(sys.path)"
 
-# 确保在项目根目录
+# Ensure in project root directory
 pwd
 ls -la src/
 ```
 
-### 3. 性能问题 (Performance Issues)
+### 3. Azure Configuration Issues
 
-#### 问题: 搜索响应慢
-- 检查网络连接到 Azure 服务
-- 减少搜索结果数量 (修改 config.py 中的 top_k)
-- 启用并发搜索 (默认已启用)
-
-#### 问题: 内存使用高
-- 减少对话历史长度 (修改 config.py 中的 max_history)
-- 限制文档片段大小
-- 使用流式响应
-
-### 4. Azure 配置问题 (Azure Configuration Issues)
-
-#### 问题: Azure OpenAI 配额超限
+#### Issue: Azure OpenAI quota exceeded
 ```bash
-# 检查配额使用情况
+# Check quota usage
 az cognitiveservices account list-usage \
   --name YOUR_OPENAI_RESOURCE_NAME \
   --resource-group YOUR_RESOURCE_GROUP
 ```
 
-#### 问题: Azure Search 索引不存在
+#### Issue: Azure Search index does not exist
 ```bash
-# 列出所有索引
+# List all indexes
 az search index list \
   --service-name YOUR_SEARCH_SERVICE \
   --resource-group YOUR_RESOURCE_GROUP
 ```
 
-#### 问题: API 密钥无效
+#### Issue: Invalid API key
 ```bash
-# 获取 Azure OpenAI 密钥
+# Get Azure OpenAI key
 az cognitiveservices account keys list \
   --name YOUR_OPENAI_RESOURCE_NAME \
   --resource-group YOUR_RESOURCE_GROUP
 
-# 获取 Azure Search 密钥
+# Get Azure Search key
 az search admin-key show \
   --service-name YOUR_SEARCH_SERVICE \
   --resource-group YOUR_RESOURCE_GROUP
 ```
 
-### 5. 开发模式 (Development Mode)
+### 4. Development Mode
 
-#### 使用模拟数据进行开发
+#### Using mock data for development
 ```bash
-# 在 .env 文件中设置
+# Set in .env file
 USE_MOCK=true
 
-# 或者通过环境变量
+# Or via environment variable
 export USE_MOCK=true
 streamlit run src/app.py
 ```
 
-#### 启用调试模式
+#### Enable debug mode
 ```bash
-# 在 .env 文件中设置
+# Set in .env file
 LOG_LEVEL=DEBUG
 
-# 查看详细日志
+# View detailed logs
 tail -f logs/app.log
 ```
 
-### 6. 测试问题 (Testing Issues)
+### 5. Testing Issues
 
-#### 运行系统测试
+#### Run system tests
 ```bash
-# 激活虚拟环境
+# Activate virtual environment
 source venv/bin/activate
 
-# 运行测试
-python src/test_system.py
+# Run tests
+python test_script/test_system.py
 
-# 运行特定测试
-python -m pytest src/test_system.py::test_config_creation -v
+# Run specific test
+python -m pytest test_script/test_system.py::test_config_creation -v
 ```
 
-#### 测试 Azure 连接
+#### Test Azure connections
 ```bash
-# 测试 Azure OpenAI 连接
+# Test Azure OpenAI connection
 python -c "
 from src.config import ConfigManager
 config = ConfigManager()
 print('Azure OpenAI Config:', config.azure_openai)
 "
 
-# 测试 Azure Search 连接
+# Test Azure Search connection
 python -c "
 from src.azure_search import AzureSearchClient
 from src.config import ConfigManager
@@ -179,63 +167,63 @@ print('Search client created successfully')
 "
 ```
 
-## 快速诊断脚本
+## Quick Diagnostic Script
 
 ```bash
 #!/bin/bash
-# 运行此脚本进行快速诊断
+# Run this script for quick diagnosis
 
-echo "=== 系统诊断 ==="
+echo "=== System Diagnosis ==="
 
-echo "1. Python 版本:"
+echo "1. Python version:"
 python3 --version
 
-echo "2. 虚拟环境状态:"
+echo "2. Virtual environment status:"
 if [ -n "$VIRTUAL_ENV" ]; then
-    echo "✓ 虚拟环境已激活: $VIRTUAL_ENV"
+    echo "✓ Virtual environment activated: $VIRTUAL_ENV"
 else
-    echo "✗ 虚拟环境未激活"
+    echo "✗ Virtual environment not activated"
 fi
 
-echo "3. 关键包检查:"
+echo "3. Key package check:"
 python -c "import streamlit; print('✓ Streamlit')" 2>/dev/null || echo "✗ Streamlit"
 python -c "import pydantic; print('✓ Pydantic')" 2>/dev/null || echo "✗ Pydantic"
 python -c "import dotenv; print('✓ Python-dotenv')" 2>/dev/null || echo "✗ Python-dotenv"
 
-echo "4. 配置文件检查:"
-[ -f ".env" ] && echo "✓ .env 文件存在" || echo "✗ .env 文件不存在"
-[ -f "requirements.txt" ] && echo "✓ requirements.txt 存在" || echo "✗ requirements.txt 不存在"
+echo "4. Configuration file check:"
+[ -f ".env" ] && echo "✓ .env file exists" || echo "✗ .env file not found"
+[ -f "requirements.txt" ] && echo "✓ requirements.txt exists" || echo "✗ requirements.txt not found"
 
-echo "5. 项目结构检查:"
-[ -d "src" ] && echo "✓ src 目录存在" || echo "✗ src 目录不存在"
-[ -f "src/app.py" ] && echo "✓ app.py 存在" || echo "✗ app.py 不存在"
+echo "5. Project structure check:"
+[ -d "src" ] && echo "✓ src directory exists" || echo "✗ src directory not found"
+[ -f "src/app.py" ] && echo "✓ app.py exists" || echo "✗ app.py not found"
 
-echo "=== 诊断完成 ==="
+echo "=== Diagnosis Complete ==="
 ```
 
-## 联系支持
+## Contact Support
 
-如果以上解决方案都无法解决问题，请收集以下信息：
+If the above solutions cannot resolve the issue, please collect the following information:
 
-1. 操作系统和版本
-2. Python 版本
-3. 错误的完整堆栈跟踪
-4. .env 文件内容（隐藏敏感信息）
-5. 运行 `pip list` 的输出
+1. Operating system and version
+2. Python version
+3. Complete error stack trace
+4. .env file content (hide sensitive information)
+5. Output of `pip list`
 
-### 获取详细错误信息
+### Get detailed error information
 ```bash
-# 启用详细日志
+# Enable verbose logging
 export LOG_LEVEL=DEBUG
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
 
-# 运行应用并捕获错误
+# Run application and capture errors
 python src/app.py 2>&1 | tee error.log
 ```
 
-### 重置到初始状态
+### Reset to initial state
 ```bash
-# 完全重置项目
+# Complete project reset
 ./setup.sh clean
 ./quick_fix.sh
 ```
