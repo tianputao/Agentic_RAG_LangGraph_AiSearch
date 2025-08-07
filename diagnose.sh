@@ -79,7 +79,12 @@ main() {
     [ -f "src/rag_agent.py" ] && check_pass "rag_agent.py exists" || check_fail "rag_agent.py missing"
     [ -f "src/azure_search.py" ] && check_pass "azure_search.py exists" || check_fail "azure_search.py missing"
     [ -f "src/mock_dependencies.py" ] && check_pass "mock_dependencies.py exists" || check_fail "mock_dependencies.py missing"
-    [ -f "src/test_system.py" ] && check_pass "test_system.py exists" || check_fail "test_system.py missing"
+    [ -f "test_script/test_system.py" ] && check_pass "test_system.py exists" || check_fail "test_system.py missing"
+    
+    # Runtime directories
+    [ -d "logs" ] && check_pass "logs directory exists" || check_warning "logs directory missing (will be created)"
+    [ -d "cache" ] && check_pass "cache directory exists" || check_warning "cache directory missing (will be created)"
+    [ -d "data" ] && check_pass "data directory exists" || check_warning "data directory missing (will be created)"
     
     # Python Dependencies
     print_section "3. Python Dependencies"
@@ -103,17 +108,17 @@ main() {
     print_section "4. Configuration"
     
     if [ -f ".env" ]; then
-        if grep -q "AZURE_OPENAI_API_KEY.*your_.*key" .env; then
+        if grep -q "AZURE_OPENAI_KEY.*your_.*key" .env; then
             check_warning "Azure OpenAI API key needs to be updated"
-        elif grep -q "AZURE_OPENAI_API_KEY" .env; then
+        elif grep -q "AZURE_OPENAI_KEY" .env; then
             check_pass "Azure OpenAI API key configured"
         else
             check_warning "Azure OpenAI API key not found in .env"
         fi
         
-        if grep -q "AZURE_SEARCH_API_KEY.*your_.*key" .env; then
+        if grep -q "AZURE_SEARCH_KEY.*your_.*key" .env; then
             check_warning "Azure Search API key needs to be updated"
-        elif grep -q "AZURE_SEARCH_API_KEY" .env; then
+        elif grep -q "AZURE_SEARCH_KEY" .env; then
             check_pass "Azure Search API key configured"
         else
             check_warning "Azure Search API key not found in .env"

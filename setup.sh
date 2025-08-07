@@ -131,8 +131,13 @@ setup_environment() {
     print_status "Setting up environment configuration..."
     
     if [ ! -f ".env" ]; then
-        # Create a basic .env file with template
-        cat > .env << 'EOF'
+        # Check if .env.example exists to copy from
+        if [ -f ".env.example" ]; then
+            cp .env.example .env
+            print_status "Created .env file from .env.example template ✓"
+        else
+            # Create a basic .env file with template
+            cat > .env << 'EOF'
 # Azure OpenAI Configuration
 AZURE_OPENAI_ENDPOINT=your_openai_endpoint_here
 AZURE_OPENAI_KEY=your_openai_key_here
@@ -148,11 +153,16 @@ AZURE_SEARCH_INDEX_NAME=your_index_name_here
 LOG_LEVEL=INFO
 MAX_SEARCH_RESULTS=20
 ENABLE_MOCK_MODE=true
+
+# Citation URL Configuration
+DOC_BASEURL=
+DOC_SAS=
 EOF
-        print_warning "Created .env file with template values"
+            print_status "Created .env file with template values ✓"
+        fi
         print_warning "Please edit .env file with your Azure credentials before running the application"
     else
-        print_warning ".env file already exists"
+        print_status ".env file already exists ✓"
     fi
 }
 
@@ -217,9 +227,9 @@ except Exception as e:
 "
     
     # Run comprehensive test suite if available
-    if [ -f "src/test_system.py" ]; then
+    if [ -f "test_script/test_system.py" ]; then
         print_status "Running comprehensive test suite..."
-        cd src && python3 test_system.py && cd ..
+        cd test_script && python3 test_system.py && cd ..
     fi
     
     print_status "Basic tests completed ✓"
@@ -227,16 +237,34 @@ except Exception as e:
 
 # Create necessary directories
 create_directories() {
-    print_status "Creating necessary directories..."
+    print_status "Ensuring runtime directories exist..."
     
-    DIRS=("logs" "data" "cache" "src")
+    # Only create directories that are needed at runtime but might be empty in git
+    # These directories are typically in .gitignore or empty
+    RUNTIME_DIRS=("logs" "cache" "data")
     
-    for dir in "${DIRS[@]}"; do
+    for dir in "${RUNTIME_DIRS[@]}"; do
         if [ ! -d "$dir" ]; then
             mkdir -p "$dir"
             print_status "Created $dir directory ✓"
+        else
+            print_status "$dir directory already exists ✓"
         fi
     done
+    
+    # Create subdirectories that might be needed
+    mkdir -p logs/app
+    mkdir -p cache/embeddings
+    mkdir -p data/exports
+    
+    print_status "Runtime directories ready ✓"
+    
+    # Note: src directory should already exist from git clone/fork
+    # If src doesn't exist, something is wrong with the repository
+    if [ ! -d "src" ]; then
+        print_error "src directory missing! Please ensure you've cloned the complete repository."
+        exit 1
+    fi
 }
 
 # Main setup function

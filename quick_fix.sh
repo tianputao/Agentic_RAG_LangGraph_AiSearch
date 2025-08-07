@@ -168,7 +168,7 @@ EOF
     print_status "2. Run: source venv/bin/activate"
     print_status "3. Run: streamlit run src/app.py"
     print_status ""
-    print_status "For troubleshooting, run: python src/test_system.py"
+    print_status "For troubleshooting, run: python test_script/test_system.py"
 }
 
 # Run main function

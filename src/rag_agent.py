@@ -18,10 +18,7 @@ try:
     from langchain.memory import ConversationBufferWindowMemory
     LANGCHAIN_AVAILABLE = True
 except ImportError:
-    # Fallback imports for development/testing
-    import sys
-    import os
-    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'test_script'))
+    # Mock implementations for development without full dependencies
     from mock_dependencies import (
         MockStateGraph as StateGraph,
         MockLLM as AzureChatOpenAI,

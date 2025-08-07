@@ -91,7 +91,7 @@ def run_cli_demo():
         if src_path not in sys.path:
             sys.path.insert(0, src_path)
             
-        from rag_agent import AgenticRAGAgent
+        from rag_agent import AgenticRAGAgent # type: ignore
         
         # Initialize agent
         agent = AgenticRAGAgent()

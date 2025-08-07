@@ -35,6 +35,20 @@ st.set_page_config(
 # Add current directory to path for imports
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
+# Ensure runtime directories exist
+def ensure_runtime_directories():
+    """Create runtime directories if they don't exist"""
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    runtime_dirs = ["logs", "data", "cache"]
+    
+    for dir_name in runtime_dirs:
+        dir_path = os.path.join(project_root, dir_name)
+        if not os.path.exists(dir_path):
+            os.makedirs(dir_path, exist_ok=True)
+
+# Initialize runtime directories
+ensure_runtime_directories()
+
 # Import agent (with fallback for missing dependencies)
 try:
     from rag_agent import AgenticRAGAgent
@@ -170,8 +184,6 @@ class StreamlitRAGApp:
                 load_dotenv(env_file)
             except ImportError:
                 # Fallback manual loading
-                import sys
-                sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'test_script'))
                 from mock_dependencies import load_dotenv
                 load_dotenv(env_file)
         

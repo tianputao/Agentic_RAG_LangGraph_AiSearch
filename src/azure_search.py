@@ -25,15 +25,8 @@ try:
     from azure.core.exceptions import AzureError
     AZURE_SDK_AVAILABLE = True
 except ImportError:
-    # Fallback imports for development/testing
-    import sys
-    import os
-    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'test_script'))
+    # Mock imports for development without Azure dependencies
     from mock_dependencies import MockAzureSearchClient
-    SearchClient = None
-    AzureKeyCredential = None
-    AzureError = Exception
-    AZURE_SDK_AVAILABLE = False
 import time
 
 # Configure logging
