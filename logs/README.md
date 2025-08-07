@@ -1,4 +1,4 @@
-# Logs Directory
+# Logs Directory (It will be realized soon)
 
 This directory contains application logs and debugging information.
 

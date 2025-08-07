@@ -1,4 +1,4 @@
-# Cache Directory (It will be realized in the near future)
+# Cache Directory (It will be realized soon)
 
 This directory stores temporary cached data to improve application performance.
 
