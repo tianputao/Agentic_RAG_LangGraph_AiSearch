@@ -1,6 +1,6 @@
-# Cache Directory
+# Cache Directory (It will be realized in the near future)
 
-This directory stores temporary cached data to improve application performance. （It will be realized in the near future）
+This directory stores temporary cached data to improve application performance.
 
 ## Structure
 - `embeddings/` - Cached text embeddings
