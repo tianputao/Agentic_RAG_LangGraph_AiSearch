@@ -74,12 +74,14 @@ venv.bak/
 .python-version
 
 # Logs
-logs/
-*.log
+logs/*
+!logs/README.md
 
 # Data and cache directories
-data/
-cache/
+data/*
+!data/README.md
+cache/*
+!cache/README.md
 temp/
 tmp/
 
